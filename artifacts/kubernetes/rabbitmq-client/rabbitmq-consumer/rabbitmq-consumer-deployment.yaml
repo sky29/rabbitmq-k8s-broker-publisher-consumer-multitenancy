@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: rabbitmq-consumer-deployment
+  namespace: rabbitmq-client-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-consumer
+    spec:
+      containers:
+      - name: rabbitmq-consumer
+        image: akashdocker29/rabbitmq-consumer:0.0.1-SNAPSHOT
+        ports:
+        - containerPort: 9002
+        env:
+           - name: spring.rabbitmq.host
+             valueFrom:
+                secretKeyRef:
+                   name: rabbitmq-client-secret
+                   key: spring-rabbitmq-host
+           - name: spring.rabbitmq.username
+             valueFrom:
+                secretKeyRef:
+                   name: rabbitmq-client-secret
+                   key: spring-rabbitmq-username
+           - name: spring.rabbitmq.password
+             valueFrom:
+                secretKeyRef:
+                   name: rabbitmq-client-secret
+                   key: spring-rabbitmq-password
